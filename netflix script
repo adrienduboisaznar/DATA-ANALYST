@@ -1,11 +1,11 @@
 /* Intro */
 
-/* I import the database into excel and i ended with the duplicate
+/* I import the database into excel and I ended with a duplicate
 --> data --> erase the duplicate */
 
 
 /*I import the dataset into sql 
- Let see our data */
+ Let's see our data */
 
 select *
 from sortlist.dbo.netflix
@@ -31,14 +31,14 @@ from sortlist.dbo.netflix
 /*Question 3 : -What are the top 5 movie directors that have the longest total movie duration available on Netflix ? */
 
 /* On excel : type --> filter -> does not content « season » and « seasons » (copypast in an another sheet) ; 
-in the new sheet i had to fixe the duration variable that was a string variable. --> i generate a new variable =
+in the new sheet I had to fix the duration variable that was a string variable. --> I generate a new variable =
 durationinminutes=left(duration;3) in order to delete "min"
-and i selected durationinminutes to convert it as a integer variable data->convert data > next ->advanced
+and I selected durationinminutes to convert it as a integer variable data->convert data > next ->advanced
 -> decimal separator as "." and not as ","(default) -> now my variable is a string.
-And to finish it : i fix the problem of names of "director" creating a newvariable director= Trim(director)
--> end up with the evantual spaces and i create a new variable director to end up with the uppercase =lower()
-i do that just in case that there is the same director but with a different character size
-Now i finished my data cleaning */
+And to finish it : I fix the problem of names of "director" creating a new variable director= Trim(director)
+-> end up with the eventual spaces and I create a new variable director to end up with the uppercase =lower()
+I do  just in case that there is the same director but with a different character size
+Now I finished cleaning my data  */
 
 /* I import my newdatabase into sql
 On Sql:We only need to select the following variables : director, type and durationinminutes */
@@ -69,13 +69,13 @@ On Sql:We only need to select the following variables : director, type and durat
 /* question 5 : -Bonus: What are the top 5 actors seen on Netflix in the United States since 2018 (year of release) (those with the most titles)  */
 
 /*On excel: 
-Before everything , i create a new variable casting =lower(cast) in order to dont have any 
+Before everything , i create a new variable casting =lower(cast) in order to not have any 
 problems with the syntax of the actors names
-And i also do the function trim to erase the space
+And i also use the function trim to erase the space
 Then i split my new varible in excel -> i select the data ->convert -> split -> coma delimeter 
 I filter release_year filter -> greather than 2017 ; 
 I filter contry --> filter ->text filters -> content United States.
-Copy past in an other sheet to avoid any problems with filters and i import it on sql*/
+Copy paste in an other sheet to avoid any problems with filters and i import it on sql*/
 
 /* On sql : */
 create table #temp_casting (
