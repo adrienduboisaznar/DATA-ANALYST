@@ -69,10 +69,10 @@ On Sql:We only need to select the following variables : director, type and durat
 /* question 5 : -Bonus: What are the top 5 actors seen on Netflix in the United States since 2018 (year of release) (those with the most titles)  */
 
 /*On excel: 
-Before everything , i create a new variable casting =lower(cast) in order to not have any 
+Before everything , I create a new variable casting =lower(cast) in order to not have any 
 problems with the syntax of the actors names
-And i also use the function trim to erase the space
-Then i split my new varible in excel -> i select the data ->convert -> split -> coma delimeter 
+And I also use the function trim to erase the space
+Then I split my new varible in excel -> i select the data ->convert -> split -> coma delimeter 
 I filter release_year filter -> greather than 2017 ; 
 I filter contry --> filter ->text filters -> content United States.
 Copy paste in an other sheet to avoid any problems with filters and i import it on sql*/
