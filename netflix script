@@ -1,0 +1,124 @@
+/* Intro */
+
+/* I import the database into excel and i ended with the duplicate
+--> data --> erase the duplicate */
+
+
+/*I import the dataset into sql 
+ Let see our data */
+
+select *
+from sortlist.dbo.netflix
+
+
+/* Question 1 : -What has been the growth of content over the years by type of show  
+We only need to select the following variables :  type  and date_added */
+
+select  type, date_added
+from sortlist.dbo.netflix
+
+/*************************************************************************************************/
+
+/* Question 2 : -Is there seasonality in the dates when titles are added on the platform? 
+On SQL : We only need to select the following variables : title and date_added */
+
+select  title, date_added
+from sortlist.dbo.netflix
+
+
+/*************************************************************************************************/
+
+/*Question 3 : -What are the top 5 movie directors that have the longest total movie duration available on Netflix ? */
+
+/* On excel : type --> filter -> does not content « season » and « seasons » (copypast in an another sheet) ; 
+in the new sheet i had to fixe the duration variable that was a string variable. --> i generate a new variable =
+durationinminutes=left(duration;3) in order to delete "min"
+and i selected durationinminutes to convert it as a integer variable data->convert data > next ->advanced
+-> decimal separator as "." and not as ","(default) -> now my variable is a string.
+And to finish it : i fix the problem of names of "director" creating a newvariable director= Trim(director)
+-> end up with the evantual spaces and i create a new variable director to end up with the uppercase =lower()
+i do that just in case that there is the same director but with a different character size
+Now i finished my data cleaning */
+
+/* I import my newdatabase into sql
+On Sql:We only need to select the following variables : director, type and durationinminutes */
+
+ select director, type, durationinminutes,
+ sum(durationinminutes) over (partition by director) as totalduration
+ from sortlist.dbo.netflix
+ where director is not null
+ order by totalduration desc
+
+
+ /* There is a new script creating a cte in order to delete the duplicates */ 
+ 
+ with uniquedirector
+ as (
+ select director,
+ sum(durationinminute) over (partition by director) as totalduration,
+ row_number() over (partition by director order by director) as row_num
+ from sortlist.dbo.netflix
+ where director is not null
+ )
+ select director, totalduration
+ from uniquedirector
+ where row_num < 2
+ order by totalduration desc
+
+
+/* question 5 : -Bonus: What are the top 5 actors seen on Netflix in the United States since 2018 (year of release) (those with the most titles)  */
+
+/*On excel: 
+Before everything , i create a new variable casting =lower(cast) in order to dont have any 
+problems with the syntax of the actors names
+And i also do the function trim to erase the space
+Then i split my new varible in excel -> i select the data ->convert -> split -> coma delimeter 
+I filter release_year filter -> greather than 2017 ; 
+I filter contry --> filter ->text filters -> content United States.
+Copy past in an other sheet to avoid any problems with filters and i import it on sql*/
+
+/* On sql : */
+create table #temp_casting (
+ actors varchar(100),
+ numberofmovies int
+ )
+ --
+insert into #temp_casting
+select split1 ,count(split1) as casting1
+from sortlist.dbo.id
+group by split1
+order by casting1 desc
+-- to --
+insert into #temp_casting
+select split34 ,count(split34) as casting34
+from sortlist.dbo.id
+group by split34
+order by casting34 desc
+--
+select *
+from #temp_casting
+where actors is not null
+order by numberofmovies desc
+ 
+ 
+ select actors, 
+ sum(numberofmovies) over(partition by actors) as totalmoviesperactors
+ from #temp_casting
+ where actors is not null
+ order by totalmoviesperactors desc
+ 
+ 
+ with uniqueactors2 
+ as
+ (
+ select actors, 
+ sum(numberofmovies) over(partition by actors) as totalmoviesperactors,
+ row_number() over(partition by actors order by actors) as rownumber
+ from #temp_casting
+ )
+ select actors,totalmoviesperactors
+ from uniqueactors2 
+ where actors is not null
+ and rownumber < 2
+ order by totalmoviesperactors desc
+ 
